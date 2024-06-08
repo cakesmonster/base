@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cakemonster.admin.dao.UserMapper">
+
+    <resultMap type="com.cakemonster.admin.model.entity.User" id="UserMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="enabled" column="enabled" jdbcType="INTEGER"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
+        <result property="slogan" column="slogan" jdbcType="VARCHAR"/>
+        <result property="gender" column="gender" jdbcType="INTEGER"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="loginIp" column="login_ip" jdbcType="VARCHAR"/>
+        <result property="loginDate" column="login_date" jdbcType="TIMESTAMP"/>
+        <result property="pwdUpdateDate" column="pwd_update_date" jdbcType="TIMESTAMP"/>
+        <result property="creator" column="creator" jdbcType="VARCHAR"/>
+        <result property="modifier" column="modifier" jdbcType="VARCHAR"/>
+        <result property="gmtCreate" column="gmt_create" jdbcType="TIMESTAMP"/>
+        <result property="gmtModify" column="gmt_modify" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 批量插入 -->
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into user
+        (name,enabled,username,password,remark,avatar,slogan,gender,email,phone,login_ip,login_date,pwd_update_date,creator,modifier,gmt_create,gmt_modify)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.name}#{entity.enabled}#{entity.username}#{entity.password}#{entity.remark}#{entity.avatar}#{entity.slogan}#{entity.gender}#{entity.email}#{entity.phone}#{entity.loginIp}#{entity.loginDate}#{entity.pwdUpdateDate}#{entity.creator}#{entity.modifier}#{entity.gmtCreate}#{entity.gmtModify})
+        </foreach>
+    </insert>
+    <!-- 批量插入或按主键更新 -->
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into user
+        (name,enabled,username,password,remark,avatar,slogan,gender,email,phone,login_ip,login_date,pwd_update_date,creator,modifier,gmt_create,gmt_modify)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.name}#{entity.enabled}#{entity.username}#{entity.password}#{entity.remark}#{entity.avatar}#{entity.slogan}#{entity.gender}#{entity.email}#{entity.phone}#{entity.loginIp}#{entity.loginDate}#{entity.pwdUpdateDate}#{entity.creator}#{entity.modifier}#{entity.gmtCreate}#{entity.gmtModify})
+        </foreach>
+        on duplicate key update
+        name = values(name) enabled = values(enabled) username = values(username) password = values(password) remark =
+        values(remark) avatar = values(avatar) slogan = values(slogan) gender = values(gender) email = values(email)
+        phone = values(phone) login_ip = values(login_ip) login_date = values(login_date) pwd_update_date =
+        values(pwd_update_date) creator = values(creator) modifier = values(modifier) gmt_create = values(gmt_create)
+        gmt_modify = values(gmt_modify)
+    </insert>
+
+    <select id="getRolesByUserId" resultType="com.cakemonster.admin.model.entity.Role">
+        select r.*
+        from role r,
+             user_role ur
+        where r.id = ur.role_id
+          and ur.user_id = #{userId}
+    </select>
+
+</mapper>
+

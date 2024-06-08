@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cakemonster.admin.dao.RoleMapper">
+
+    <resultMap type="com.cakemonster.admin.model.entity.Role" id="RoleMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="nameZh" column="name_zh" jdbcType="VARCHAR"/>
+        <result property="creator" column="creator" jdbcType="VARCHAR"/>
+        <result property="modifier" column="modifier" jdbcType="VARCHAR"/>
+        <result property="gmtCreate" column="gmt_create" jdbcType="TIMESTAMP"/>
+        <result property="gmtModify" column="gmt_modify" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 批量插入 -->
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into role (name,name_zh,creator,modifier,gmt_create,gmt_modify)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.name}#{entity.nameZh}#{entity.creator}#{entity.modifier}#{entity.gmtCreate}#{entity.gmtModify})
+        </foreach>
+    </insert>
+    <!-- 批量插入或按主键更新 -->
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into role (name,name_zh,creator,modifier,gmt_create,gmt_modify)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.name}#{entity.nameZh}#{entity.creator}#{entity.modifier}#{entity.gmtCreate}#{entity.gmtModify})
+        </foreach>
+        on duplicate key update
+        name = values(name) name_zh = values(name_zh) creator = values(creator) modifier = values(modifier) gmt_create =
+        values(gmt_create) gmt_modify = values(gmt_modify)
+    </insert>
+
+</mapper>
+
